@@ -2,7 +2,7 @@
 # tasks file for chrony
 
 #------------------------------------------------------------------------
-# Script        : /home/ftao/ansible/roles/chrony/tasks/main.yml
+# Script        : main.yml
 # Description   : Configure chrony
 # Dependencies  : ansible, python, ssh
 # Usage         : ansible-playbook <file> -bk
