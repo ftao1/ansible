@@ -1,0 +1,7 @@
+---
+
+# pvsvol var file
+
+pvsvol:
+   - vol: vgsystem
+     pvs: /dev/sdb

@@ -1,0 +1,27 @@
+---
+
+# Playbook to add ssh fingerprints to ~/.ssh/known_hosts
+# This should be run on for servers unknown to the controller before any other playbooks
+# This looks at the default inventory file for hosts which can include an alternative port to port 22
+
+- hosts: all
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: Setup Known Hosts With Port
+      delegate_to: localhost
+      known_hosts:
+         key: "{{ lookup('pipe', 'ssh-keyscan -trsa -p ' + lookup('config', 'DEFAULT_REMOTE_PORT') | string + ' ' + inventory_hostname) }}"
+         name: "{{ inventory_hostname }}"
+         state: present
+      when: lookup('config', 'DEFAULT_REMOTE_PORT') | string != "None"
+
+    - name: Setup Known Hosts Without Port
+      delegate_to: localhost
+      known_hosts:
+         key: "{{ lookup('pipe', 'ssh-keyscan -trsa ' + inventory_hostname) }}"
+         name: "{{ inventory_hostname }}"
+         state: present
+      when: lookup('config', 'DEFAULT_REMOTE_PORT') | string == "None"
+

@@ -1,0 +1,10 @@
+---
+
+- hosts: ab1
+
+
+  roles:
+     - bonding
+     - chrony
+     - dns
+     - common

@@ -1,0 +1,81 @@
+---
+
+#-----------------------------------------------------------------------
+# Title         : Add LVM vols postinstall
+#
+# Script        : PO.yml
+# Description   : Add LVM vols postinstall
+# Dependencies  : ansible, python, ssh
+# Usage         : ansible-playbook <file> -bk
+# Author        : Fai Tao
+# Version       : 0.1
+# Date          : 28 Feb 2020
+#
+# Change history (most recent first)
+#
+# Date          Who             Comments
+# ----          ---             --------
+# 28/02/20      FT              Initial draft
+#-----------------------------------------------------------------------
+
+
+  - include_vars:
+      file: "{{ item }}"
+    loop:
+      - "{{ inventory_hostname }}-fs.yml"
+      - "{{ inventory_hostname }}-pvs.yml"
+    tags:
+      - mounts
+
+
+# Add the PVs
+  - name: Add VG vgsystem
+    lvg:
+      vg: "{{ item.vol }}"
+      pvs: "{{ item.pvs }}"
+    loop: "{{ pvsvol }}"
+
+
+# Add VG and LV
+  - name: Add VG and LV
+    lvol:
+      vg: "{{ item.vg }}"
+      lv: "{{ item.lv }}"
+      size: "{{ item.size }}"
+    loop: "{{ logvols }}"
+
+
+# Create new FS
+  - name: Create the FS for each LogVol
+    filesystem:
+      fstype: ext4
+      dev: /dev/mapper/{{ item.vg }}-{{ item.lv }}
+    loop: "{{ logvols }}"
+
+
+# Mount new FS
+  - name: Mount new FS
+    mount:
+      path: "{{ item.path }}"
+      src: /dev/mapper/{{ item.vg }}-{{ item.lv }}
+      fstype: ext4
+      opts: defaults,nodev
+      dump: 1
+      passno: 2
+      state: mounted
+    loop: "{{ logvols }}"
+    tags:
+      - mounts
+
+
+# Set owner and perms for mountpoint
+  - name: Set owner and perms for mountpoint
+    file:
+      path: "{{ item.path }}"
+      owner: "{{ item.owner }}"
+      group: "{{ item.group }}"
+      mode: "{{ item.mode }}"
+    loop: "{{ logvols }}"
+    tags:
+     - perms
+

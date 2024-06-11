@@ -1,0 +1,14 @@
+---
+
+# logvols var file
+
+
+logvols:
+   - vg: vgsystem
+     lv: lvol7
+     size: 100%FREE
+     path: /opt/oracle
+     owner: oracle
+     group: dba
+     mode: '0755'
+

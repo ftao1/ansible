@@ -1,0 +1,43 @@
+---
+
+#-----------------------------------------------------------------------
+#
+# Description   : Get some basic info about the remote hosts.
+# Script        : tasks/main.yml
+# Dependencies  : ansible, python, ssh, getinfo.sh, scriptran.sh
+# Usage         : ansible-playbook <file> -bk
+# Author        : Fai Tao
+# Version       : 0.1
+# Date          : 26 Mar 2020
+#
+# Change history (most recent first)
+#
+# Date          Who             Comments
+# ----          ---             --------
+# 26/03/20      FT              Initial draft
+#-----------------------------------------------------------------------
+
+# To make shell scripts idempotent we create a file after the script is run.
+# The presence of the control file determines if the script is run again.
+
+  - name: Copy over the getinfo.sh script to remote and run on remote boxes - RUN ONCE ONLY
+    script: "{{ item }}"
+    loop:
+      - getinfo.sh
+
+  - name: Find host report
+    shell: (ls -1 ~ftao/$(hostname).facts.*.txt)
+    register: host_report
+    tags:
+      - reg
+
+  - name: Fetch host report
+    fetch:
+      src: "{{ item }}"
+      dest: ~ftao/ansible/HOST_REPORTS/
+      flat: yes
+    loop: "{{ host_report.stdout_lines }}"
+    tags:
+      - report
+
+

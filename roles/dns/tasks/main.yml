@@ -1,0 +1,32 @@
+---
+# tasks file for dns
+
+#-----------------------------------------------------------------------
+# Title         : Copy resolv.conf to remote clients
+#
+# Script        : tasks/main.yml
+# Description   : Copy resolv.conf to remote clients
+# Dependencies  : ansible, python, ssh
+# Usage         : ansible-playbook <file> -bk
+# Author        : Fai Tao
+# Version       : 0.1
+# Date          : 23 Jan 2020
+#
+# Change history (most recent first)
+#
+# Date          Who             Comments
+# ----          ---             --------
+# 23/01/20      FT              Initial draft
+#-----------------------------------------------------------------------
+
+
+# Copy resolv.conf to /etc/resolv.conf on remote client -----------------------------------------------
+  - name: Copy resolv.conf to /etc/resolv.conf on remote client
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: "{{ item.mode }}"
+    loop:
+      - { src: 'resolv.conf', dest: '/etc/resolv.conf', mode: '0664'}

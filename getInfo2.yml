@@ -1,0 +1,40 @@
+---
+
+#-----------------------------------------------------------------------
+# Script        : getInfo2.yml
+# Description   : Use facts to get info about remote servers
+# Dependencies  : ansible, python, ssh
+# Usage         : ansible-playbook <file> -bk
+# Author        : Fai Tao
+# Version       : 0.1
+# Date          : 07 Apr 2020
+#
+# Change history (most recent first)
+#
+# Date          Who             Comments
+# ----          ---             --------
+# 07/04/20      FT              Initial draft
+#-----------------------------------------------------------------------
+
+- hosts: all
+
+  gather_facts: True
+
+  tasks:
+  #- debug: var=hostvars[inventory_hostname]['ansible_default_ipv4']['address']
+
+
+  - name: Get some info
+    debug:
+      msg:
+      - "The hostname is {{ ansible_hostname }}"
+      - "The REDHAT distribution is {{ ansible_distribution_version }}"
+      - "The IP is {{ ansible_default_ipv4.address }}"
+      - "The Netmask is {{ ansible_default_ipv4.netmask }}"
+      - "The Gateway is {{ ansible_default_ipv4.gateway }}"
+      - "The MAC is {{ ansible_default_ipv4.macaddress }}"
+      - "The DNS1 is {{ ansible_dns.nameservers[0] }}"
+      - "The DNS2 is {{ ansible_dns.nameservers[1] }}"
+      - "The DNS3 is {{ ansible_dns.nameservers[2] }}"
+      - "The DNS4 is {{ ansible_dns.nameservers[3] }}"
+      - "The Domain is {{ ansible_dns.search[0] }}"

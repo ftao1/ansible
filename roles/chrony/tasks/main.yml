@@ -1,0 +1,37 @@
+---
+# tasks file for chrony
+
+#------------------------------------------------------------------------
+# Script        : /home/ftao/ansible/roles/chrony/tasks/main.yml
+# Description   : Configure chrony
+# Dependencies  : ansible, python, ssh
+# Usage         : ansible-playbook <file> -bk
+# Author        : Fai Tao
+# Version       : 0.1
+# Date          : 20 Oct 2020
+#
+# Change history (most recent first)
+#
+# Date          Who             Comments
+# ----          ---             --------
+# 20/10/20      FT              Initial draft
+#------------------------------------------------------------------------
+
+
+# Copy chrony.conf file to remote
+  - name: Copy chrony.conf file to remote
+    copy:
+      src: chrony.conf
+      dest: /etc/chrony.conf
+      owner: root
+      group: root
+      mode: '0644'
+
+# Configure chrony
+  - name: Configure chrony
+    copy:
+      src: chronyd
+      dest: /etc/sysconfig/chronyd
+      owner: root
+      group: root
+      mode: '0644'

@@ -1,0 +1,31 @@
+---
+
+#-----------------------------------------------------------------------
+# Script        : main.yml
+# Description   : Set up bonding for bond0 and bond1 for target hosts
+# Dependencies  : ansible, python, ssh, set_message.sh, scriptran.sh
+# Usage         : ansible-playbook <file> -bk
+# Author        : Fai Tao
+# Version       : 0.1
+# Date          : 16 Apr 2020
+#
+# Change history (most recent first)
+#
+# Date          Who             Comments
+# ----          ---             --------
+# 16/04/20      FT              Initial draft
+#-----------------------------------------------------------------------
+
+# To make shell scripts idempotent we create a file after the script is run.
+# The presence of the control file determines if the script is run again.
+
+  - name: Copy over the bond.sh script to remote and run on remote boxes - RUN ONCE ONLY
+    script: "{{ item }}"
+    with_items:
+      - bond.sh
+      - bondran.sh
+    args:
+      chdir: /home/ftao
+      creates: bond.ran
+
+
